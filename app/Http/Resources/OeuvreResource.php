@@ -11,6 +11,7 @@ class OeuvreResource extends JsonResource
     {
         return [
             'id' => (string) $this->id,
+            'type' => $this->type,
             'imageUrl' => $this->url(),
             'degrade' => $this->degrade,
             'legende' => $this->legende,

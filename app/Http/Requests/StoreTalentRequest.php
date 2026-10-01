@@ -22,7 +22,16 @@ class StoreTalentRequest extends FormRequest
             'ville' => ['required', 'string', 'max:60'],
             'quartier' => ['nullable', 'string', 'max:60'],
 
-            // Étape 2 — facultative : « Je le ferai plus tard » existe dans le parcours
+            // Étape 2 — facultative : « Je le ferai plus tard » existe dans le parcours.
+            // Deux formes acceptées : de VRAIS fichiers (fichiers[]), ou des
+            // dégradés de démonstration quand le talent n'a pas encore de photo.
+            'fichiers' => ['sometimes', 'array', 'max:6'],
+            'fichiers.*' => [
+                'file',
+                'mimes:jpg,jpeg,png,webp,heic,mp4,mov,webm',
+                'max:'.StoreOeuvreRequest::TAILLE_MAX_KO,
+            ],
+
             'oeuvres' => ['sometimes', 'array', 'max:6'],
             'oeuvres.*.degrade' => ['nullable', Rule::in(self::DEGRADES)],
             'oeuvres.*.legende' => ['nullable', 'string', 'max:120'],
@@ -49,6 +58,9 @@ class StoreTalentRequest extends FormRequest
             'whatsapp.required' => 'Sans numéro, les clients ne peuvent pas vous joindre.',
             'whatsapp.regex' => 'Ce numéro ne ressemble pas à un numéro de téléphone.',
             'oeuvres.max' => 'Six œuvres au maximum pour l\'instant.',
+            'fichiers.max' => 'Six fichiers au maximum pour commencer.',
+            'fichiers.*.mimes' => 'Formats acceptés : JPG, PNG, WEBP, HEIC, MP4, MOV, WEBM.',
+            'fichiers.*.max' => 'Un fichier dépasse 20 Mo.',
             'password.required' => 'Choisissez un mot de passe pour revenir modifier votre profil.',
             'password.min' => 'Six caractères au minimum.',
             'password.confirmed' => 'Les deux mots de passe ne sont pas les mêmes.',

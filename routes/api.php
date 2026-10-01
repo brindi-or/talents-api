@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\OeuvreController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TalentController;
 use Illuminate\Support\Facades\Route;
@@ -38,4 +39,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // La TalentPolicy vérifie en plus que c'est bien SON profil.
     Route::put('talents/{talent}', [TalentController::class, 'update']);
+
+    // Les œuvres : un fichier par appel. En 3G, un envoi groupé qui échoue
+    // à la cinquième photo perd les quatre premières.
+    Route::post('talents/{talent}/oeuvres', [OeuvreController::class, 'store']);
+    Route::delete('talents/{talent}/oeuvres/{oeuvre}', [OeuvreController::class, 'destroy']);
 });

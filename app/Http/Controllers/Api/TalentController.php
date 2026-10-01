@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTalentRequest;
 use App\Http\Requests\UpdateTalentRequest;
 use App\Http\Resources\TalentResource;
+use App\Models\Oeuvre;
 use App\Models\Interaction;
 use App\Models\Talent;
 use App\Models\User;
@@ -88,6 +89,11 @@ class TalentController extends Controller
                 'whatsapp' => $valide['whatsapp'],
                 'video_url' => $valide['videoUrl'] ?? null,
             ]);
+
+             // Les vrais fichiers d'abord : ce sont eux qui comptent.
+            foreach ($requete->file('fichiers') ?? [] as $fichier) {
+                Oeuvre::depuisFichier($talent, $fichier);
+            }
 
             foreach ($valide['oeuvres'] ?? [] as $rang => $oeuvre) {
                 $talent->oeuvres()->create([
